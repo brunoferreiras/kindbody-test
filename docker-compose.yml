@@ -13,6 +13,8 @@ services:
         - BUILDPLATFORM=linux/arm64 # for mac m1
     container_name: kindbody-app
     restart: unless-stopped
+    volumes:
+      - .:/app
     tty: true
     networks:
       - kindbody

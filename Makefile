@@ -12,3 +12,6 @@ bash:
 
 logs:
 	docker compose logs -f
+
+install-deps:
+	docker compose exec app bundle install
