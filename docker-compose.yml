@@ -1,0 +1,19 @@
+version: '3'
+
+networks:
+  kindbody:
+    driver: bridge
+
+services:
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - BUILDPLATFORM=linux/arm64 # for mac m1
+    container_name: kindbody-app
+    restart: unless-stopped
+    tty: true
+    networks:
+      - kindbody
+    
