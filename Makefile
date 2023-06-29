@@ -13,5 +13,8 @@ bash:
 logs:
 	docker compose logs -f
 
+test:
+	bundle exec rspec spec zip_code_endpoint_spec.rb
+
 install-deps:
 	docker compose exec app bundle install
