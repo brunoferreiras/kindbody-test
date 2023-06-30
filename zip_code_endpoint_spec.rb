@@ -1,4 +1,5 @@
 require 'rspec'
+#require 'spec_helper'
 require_relative 'zip_code_endpoint'
 
 RSpec.describe ZipCodeEndpoint do

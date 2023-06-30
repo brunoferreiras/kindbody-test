@@ -17,9 +17,8 @@ class ZipCodeEndpoint
     private
 
     def format_response(sorted_zips, zip_codes_with_distance)
-      response = []
-      sorted_zips.each do |item|
-        tmp_item = {
+      sorted_zips.map do |item|
+        {
           name: item.name,
           address: item.address,
           city: item.city,
@@ -29,9 +28,7 @@ class ZipCodeEndpoint
           contact_email: item.contact_email,
           contact_name: item.contact_name
         }
-        response.push(tmp_item)
       end
-      response
     end
 
     def extract_zip_codes_from_api(zipcode, radius, units)
