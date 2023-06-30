@@ -41,12 +41,15 @@ class ZipCodeEndpoint
       zip_data = call_zip_codes_api(zip_code, radius, units)
       return nil unless zip_data
 
-      tmp_array_of_zips = { 'zip_codes' => [], 'zip_codes_with_distance' => {} }
+      zip_codes = []
+      zip_codes_with_distance = {}
+
       zip_data['zip_codes'].each do |item|
-        tmp_array_of_zips['zip_codes'].push(item['zip_code'])
-        tmp_array_of_zips['zip_codes_with_distance'][item['zip_code']] = item['distance']
+        zip_codes << item['zip_code']
+        zip_codes_with_distance[item['zip_code']] = item['distance']
       end
-      tmp_array_of_zips
+      
+      { 'zip_codes' => zip_codes, 'zip_codes_with_distance' => zip_codes_with_distance }
     end
 
     def call_zip_codes_api()
