@@ -1,8 +1,14 @@
+TIER_VALUES = ['A', 'B', 'C'].freeze
+
 class ZipCodeEndpoint
   class << self
+    attr_accessor :zip_code, :radius, :units
     def get_zip_in_radius(zipcode, radius, units = 'mile')
+      @zip_code = zipcode
+      @radius = radius
+      @units = units
       # 1. Get list of ZIP codes in radius from starting zip code point
-      extracted_zips_from_api = extract_zip_codes_from_api(zipcode, radius, units)
+      extracted_zips_from_api = extract_zip_codes_from_api()
       return [] unless extracted_zips_from_api
 
       # 2. find all ZIP codes in the DB that match the response, and sort by tier ASC
@@ -31,8 +37,8 @@ class ZipCodeEndpoint
       end
     end
 
-    def extract_zip_codes_from_api(zipcode, radius, units)
-      zip_data = call_zip_codes_api(zipcode, radius, units)
+    def extract_zip_codes_from_api()
+      zip_data = call_zip_codes_api(zip_code, radius, units)
       return nil unless zip_data
 
       tmp_array_of_zips = { 'zip_codes' => [], 'zip_codes_with_distance' => {} }
@@ -43,8 +49,8 @@ class ZipCodeEndpoint
       tmp_array_of_zips
     end
 
-    def call_zip_codes_api(zipcode, radius, units)
-      url = "https://www.zipcodeapi.com/rest/#{ENV['ZIP_CODE_API_KEY']}/radius.json/#{zipcode}/#{radius}/#{units}"
+    def call_zip_codes_api()
+      url = "https://www.zipcodeapi.com/rest/#{ENV['ZIP_CODE_API_KEY']}/radius.json/#{zip_code}/#{radius}/#{units}"
       zip_response = Faraday.send(:post, url)
       return nil unless zip_response.success?
 
@@ -52,8 +58,7 @@ class ZipCodeEndpoint
     end
 
     def extract_zip_codes_from_db(zipcodes)
-      tier_values = ['A', 'B', 'C']
-      PartnerClinic.where('zipcode IN (?)', zipcodes).where('tier IN (?)', tier_values).order('tier ASC')
+      PartnerClinic.where('zipcode IN (?)', zipcodes).where('tier IN (?)', TIER_VALUES).order('tier ASC')
     end
 
     def sort_extracted_zips_from_db_by_distance(zip_codes_with_distance, zip_codes_from_db)
